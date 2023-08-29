@@ -10,6 +10,8 @@ app.use(express.urlencoded({extended: true}))
 
 
 //routes middleware
+const postRouter = require('./routes/postRouter');
+app.use('/api/posts', postRouter)
 
 // test api connection
 app.get('/',(req, res)=>{

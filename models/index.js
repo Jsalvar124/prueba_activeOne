@@ -36,7 +36,7 @@ db.comments = require('./Comment.js')(sequelize, DataTypes)
 db.categories = require('./Category.js')(sequelize, DataTypes)
 
 
-db.sequelize.sync({force: true}) // True to run forced migration.
+db.sequelize.sync({force: false}) // True to run forced migration.
 .then(()=>{
     console.log("DB Sincronization Updated")
 })

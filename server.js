@@ -13,10 +13,21 @@ app.use(express.urlencoded({extended: true}))
 const postRouter = require('./routes/postRouter');
 app.use('/api/posts', postRouter)
 
-// test api connection
-app.get('/',(req, res)=>{
-    res.json({message: 'Api working'})
-})
+const categoryRouter = require('./routes/categoryRouter');
+app.use('/api/categories', categoryRouter)
+
+const commentRouter = require('./routes/commentRouter');
+app.use('/api/comments', commentRouter)
+
+// // test api connection
+// app.get('/',(req, res)=>{
+//     res.json({message: 'Api working'})
+// })
+
+// catch 404 
+app.use(function(req, res, next) {
+    return res.status(404).json({message: 'Page Not found'});
+  });
 
 //Port for localhost
 const PORT = process.env.PORT || 3000;

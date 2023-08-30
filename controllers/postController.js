@@ -2,7 +2,7 @@ const db = require('../models');
 const Post = db.posts;
 const Op = db.Sequelize.Op; //sequalize con mayuscula
 
-const PostController = {
+const postController = {
 
     list: async (req, res) => {
         try {
@@ -18,8 +18,8 @@ const PostController = {
     detail: async (req, res) => {
         try {
             const { id } = req.params
-            // const post = await Post.findByPk(id, { include: { all: true } })
-            const post = await Post.findByPk(id)
+            const post = await Post.findByPk(id, { include: { all: true } })
+            // const post = await Post.findByPk(id)
             if(!post){
                 return res.status(404).json({message: 'id not found'});
             }
@@ -57,8 +57,10 @@ const PostController = {
 
         try {
 
-            let {id} = req.params
-            if(!id){
+            const { id } = req.params
+            const post = await Post.findByPk(id, { include: { all: true } })
+            // const post = await Post.findByPk(id)
+            if(!post){
                 return res.status(404).json({message: 'id not found'});
             }
             await Post.update(req.body, {
@@ -78,8 +80,10 @@ const PostController = {
     },
 
     destroy: async (req, res) => {
-        let {id} = req.params
-        if(!id){
+        const { id } = req.params
+        const post = await Post.findByPk(id, { include: { all: true } })
+        // const post = await Post.findByPk(id)
+        if(!post){
             return res.status(404).json({message: 'id not found'});
         }
         try {
@@ -100,4 +104,4 @@ const PostController = {
     }
 }
 
-module.exports = PostController;
+module.exports = postController;

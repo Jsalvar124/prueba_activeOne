@@ -7,34 +7,48 @@ const PostController = {
     list: async (req, res) => {
         try {
             const posts = await Post.findAll();
-            res.status(200).json(posts)
+            if(!posts){
+                return res.status(404).json({message: 'not found'});
+            }
+            return res.status(200).json(posts)
         } catch (error) {
-            res.send(error);
+            return res.status(500).json({message: error.message});
         }
     },
     detail: async (req, res) => {
         try {
-            const post = await db.Post.findByPk(req.params.id, { include: { all: true } });
-            res.status(200).json({
+            const { id } = req.params
+            // const post = await Post.findByPk(id, { include: { all: true } })
+            const post = await Post.findByPk(id)
+            if(!post){
+                return res.status(404).json({message: 'id not found'});
+            }
+            return res.status(200).json({
                 status: 200,
-                data: quote
+                data: post
             });
         } catch (error) {
-            res.status.json({message: 'not found'});
+            return res.status(500).json({message: error.message});
         }
     },
     //ruta POST añadir nueva frase
     create: async (req, res) => {
         try {
-            await db.Post.create(req.body);
+            let {titulo, contenido, category_id} = req.body
+            
+            await Post.create({
+                titulo,
+                contenido,
+                category_id
+            });
 
-            res.status(201).json({
+            return res.status(201).json({
                 status: 201,
                 notes: "The post was created successfully.",
-                data: result.data
+                data: req.body
             });
         } catch (error) {
-            console.log(error)
+            return  res.status(500).json({message: error.message});
 
         }
     },
@@ -42,37 +56,46 @@ const PostController = {
     update: async (req, res) => {
 
         try {
-            await db.Post.update(result.data, {
+
+            let {id} = req.params
+            if(!id){
+                return res.status(404).json({message: 'id not found'});
+            }
+            await Post.update(req.body, {
                 where: {
                     id: req.params.id
                 }
             });
-            res.status(200).json({
+            return res.status(200).json({
                 status: 200,
                 notes: "The post was updated successfully.",
-                data: result.data
+                data: req.body
             });
 
         } catch (error) {
-            res.send(error)
+            return res.status(404).json({message: error.message});
         }
     },
 
     destroy: async (req, res) => {
+        let {id} = req.params
+        if(!id){
+            return res.status(404).json({message: 'id not found'});
+        }
         try {
-            await db.Post.destroy({
+            await Post.destroy({
                 where: {
                     id: req.params.id
                 }
             });
 
-            res.status(200).json({
+            return res.status(200).json({
                 status: 200,
-                notes: "The quote was deleted successfully.",
+                notes: "The post was deleted successfully.",
                 id_deleted: req.params.id
             })
         } catch (error) {
-            console.log(error);
+            return res.status(404).json({message: error.message});
         }
     }
 }

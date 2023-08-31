@@ -1,6 +1,5 @@
 const db = require('../models');
 const Category = db.categories;
-const Op = db.Sequelize.Op; //sequalize con mayuscula
 
 const categoryController = {
 
@@ -59,7 +58,13 @@ const categoryController = {
             if(!category){
                 return res.status(404).json({message: 'id not found'});
             }
-            await Category.update(req.body, {
+            const now = new Date();
+
+            const updatedObj = {
+                fecha_actualizacion: now,
+                ...req.body
+            } 
+            await Post.update(updatedObj, {
                 where: {
                     id: req.params.id
                 }

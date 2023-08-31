@@ -1,6 +1,6 @@
 const db = require('../models');
 const Post = db.posts;
-const Op = db.Sequelize.Op; //sequalize con mayuscula
+const Op = db.Sequelize.Op; 
 
 const postController = {
 
@@ -63,7 +63,13 @@ const postController = {
             if(!post){
                 return res.status(404).json({message: 'id not found'});
             }
-            await Post.update(req.body, {
+            const now = new Date();
+
+            const updatedObj = {
+                fecha_actualizacion: now,
+                ...req.body
+            } 
+            await Post.update(updatedObj, {
                 where: {
                     id: req.params.id
                 }

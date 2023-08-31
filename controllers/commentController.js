@@ -1,6 +1,5 @@
 const db = require('../models');
 const Comment = db.comments;
-const Op = db.Sequelize.Op; //sequalize con mayuscula
 
 const commentController = {
 
@@ -59,7 +58,13 @@ const commentController = {
             if(!comment){
                 return res.status(404).json({message: 'id not found'});
             }
-            await Comment.update(req.body, {
+            const now = new Date();
+
+            const updatedObj = {
+                fecha_actualizacion: now,
+                ...req.body
+            } 
+            await Post.update(updatedObj, {
                 where: {
                     id: req.params.id
                 }
